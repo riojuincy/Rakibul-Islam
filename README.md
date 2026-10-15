@@ -1,15 +1,13 @@
-# ⚡ Riojuincy — Interactive Audio-Visual Portfolio
+# 🎬 Rakibul Islam — Movie Explainer & Portfolio
 
-Welcome to the official interactive portfolio of **Riojuincy**.
+The official portfolio of **Rakibul Islam** (Movie Explainer). Film explanations on YouTube, complete websites, software, games, and poetry.
 
 🔗 **Live Experience:** [https://riojuincy.github.io](https://riojuincy.github.io)
 
-### 🌟 Features:
-- 🎵 **12 Synchronized Soundtracks** with real-time Web Audio API FFT analysis
-- 🎨 **12 Unique Audio-Reactive Visualizer Themes** (Cyber, Neon Rain, Thunderstorm, Sakura, Frost, Solar Fire, and more)
-- 💫 **12 Theme-Adaptive Brand Effects**
-- 🖱️ **12 High-Performance Dynamic Hardware-Accelerated Cursors**
-- ⚡ **Zero External Heavy Dependencies** — pure Vanilla WebGL, Canvas2D & Web Audio
-
----
-*Crafted with high-precision audio synchronization, custom shaders, and particle physics.*
+### ✨ Features:
+- 🎬 Film Explanations & YouTube integration
+- 🎵 Built-in Ambient Audio Player & Audio-Reactive Visualizer Orbit
+- 💫 Celestial Stars, Rain & Meteor Shower Canvas Effects
+- ☕ Crypto Support (Bitcoin, Ethereum, USDT) with instant one-click copy
+- 🌙 Day / Night theme toggle with smooth transitions
+- ⚡ 100% Pure Vanilla HTML, CSS & JavaScript
