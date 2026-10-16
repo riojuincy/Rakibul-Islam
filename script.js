@@ -13,6 +13,38 @@
 
   var themeBtn = document.getElementById("theme");
   var themeMeta = document.querySelector('meta[name="theme-color"]');
+
+  function isPhoneDevice() {
+    try {
+      return window.matchMedia("(max-width: 768px)").matches ||
+        /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function getThemeKey() {
+    return isPhoneDevice() ? "theme_mobile" : "theme_desktop";
+  }
+
+  function applyDefaultThemeIfUnset() {
+    try {
+      var key = getThemeKey();
+      var saved = localStorage.getItem(key);
+      if (saved === "night") {
+        document.documentElement.setAttribute("data-theme", "night");
+      } else if (saved === "day") {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        if (isPhoneDevice()) {
+          document.documentElement.setAttribute("data-theme", "night");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      }
+    } catch (e) {}
+  }
+
   function syncTheme() {
     var night = document.documentElement.getAttribute("data-theme") === "night";
     if (themeBtn) {
@@ -21,16 +53,50 @@
     }
     if (themeMeta) themeMeta.setAttribute("content", night ? "#0b0e18" : "#ffffff");
   }
+
+  applyDefaultThemeIfUnset();
   syncTheme();
+
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {
       var night = document.documentElement.getAttribute("data-theme") !== "night";
-      if (night) document.documentElement.setAttribute("data-theme", "night");
-      else document.documentElement.removeAttribute("data-theme");
-      try { localStorage.setItem("theme", night ? "night" : "day"); } catch (e) {}
+      if (night) {
+        document.documentElement.setAttribute("data-theme", "night");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+      try {
+        localStorage.setItem(getThemeKey(), night ? "night" : "day");
+      } catch (e) {}
       syncTheme();
     });
   }
+
+  try {
+    var mql = window.matchMedia("(max-width: 768px)");
+    var onViewportChange = function (e) {
+      var key = e.matches ? "theme_mobile" : "theme_desktop";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (err) {}
+      if (saved === "night") {
+        document.documentElement.setAttribute("data-theme", "night");
+      } else if (saved === "day") {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        if (e.matches) {
+          document.documentElement.setAttribute("data-theme", "night");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      }
+      syncTheme();
+    };
+    if (mql.addEventListener) {
+      mql.addEventListener("change", onViewportChange);
+    } else if (mql.addListener) {
+      mql.addListener(onViewportChange);
+    }
+  } catch (e) {}
 
   var menu = document.getElementById("menu");
   var toggle = document.querySelector(".nav-toggle");
