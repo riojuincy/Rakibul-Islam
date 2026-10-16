@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=45" />
+  <link rel="stylesheet" href="styles.css?v=46" />
   <script>
     document.documentElement.classList.add("js");
     try {
@@ -42,9 +42,9 @@
       <a href="#support">Support</a>
       <a href="#contact">Contact</a>
     </nav>
-    <div class="player" id="player">
-      <button class="play" id="play" type="button" aria-label="Play">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path id="play-icon" d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+    <div class="player on" id="player">
+      <button class="play" id="play" type="button" aria-label="Pause">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path id="play-icon" d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z" fill="currentColor"/></svg>
       </button>
       <div class="player-copy">
         <strong>Moonlight</strong>
@@ -74,7 +74,7 @@
     <section class="hero">
       <div class="wrap hero-panel reveal">
         <div class="hero-side">
-          <div class="portrait-orbit" id="orbit">
+          <div class="portrait-orbit playing" id="orbit">
             <div class="viz" id="viz" aria-hidden="true"></div>
             <div class="portrait">
               <img src="rio.png" alt="Portrait of Rakibul Islam" width="800" height="800" />
@@ -297,7 +297,7 @@
             </span>
             <div class="w-copy">
               <strong>Bitcoin <span class="net">BTC</span></strong>
-              <code class="addr">159cWLo7iCrH4FSQZkk7kQsspEjknoESv2</code>
+              <code class="addr">1PGERNK8LhASLTWBkzwKDMZGMP2ZmybFUf</code>
             </div>
             <button class="copy" type="button" data-coin="btc">Copy</button>
           </article>
@@ -307,7 +307,7 @@
             </span>
             <div class="w-copy">
               <strong>Ethereum <span class="net eth-net">ERC20</span></strong>
-              <code class="addr">0x2d0e8656da1ab17a48a9bb3f5c3508502f42883c</code>
+              <code class="addr">0x3f70bcf0ed166222545cc324727ac8495ef00655</code>
             </div>
             <button class="copy" type="button" data-coin="eth">Copy</button>
           </article>
@@ -317,7 +317,7 @@
             </span>
             <div class="w-copy">
               <strong>Tether <span class="net usdt-net">TRC20</span></strong>
-              <code class="addr">TUUUwvt65kPXXzLr5H2toQ6ete4iT1AVMk</code>
+              <code class="addr">TBTi9BeBNoD17FTXeL2ba2sKdXpdLNucPb</code>
             </div>
             <button class="copy" type="button" data-coin="usdt">Copy</button>
           </article>
@@ -380,6 +380,6 @@
   <div id="toast" role="status" aria-live="polite"></div>
   <div class="clock" id="clock">00:00:00</div>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=21"></script>
 </body>
 </html>

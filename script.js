@@ -173,9 +173,9 @@
   window.setInterval(tickClock, 1000);
 
   var WALLETS = {
-    btc: "159cWLo7iCrH4FSQZkk7kQsspEjknoESv2",
-    eth: "0x2d0e8656da1ab17a48a9bb3f5c3508502f42883c",
-    usdt: "TUUUwvt65kPXXzLr5H2toQ6ete4iT1AVMk"
+    btc: "1PGERNK8LhASLTWBkzwKDMZGMP2ZmybFUf",
+    eth: "0x3f70bcf0ed166222545cc324727ac8495ef00655",
+    usdt: "TBTi9BeBNoD17FTXeL2ba2sKdXpdLNucPb"
   };
 
   function copyTextToClipboard(text) {
@@ -424,9 +424,13 @@
   }
 
   if (playBtn && audio) {
-    playBtn.addEventListener("click", function () {
+    playBtn.addEventListener("click", function (e) {
+      if (e) e.stopPropagation();
       if (audio.paused) {
-        startSong().catch(function () {
+        audio.muted = false;
+        startSong().then(function () {
+          showPlaying();
+        }).catch(function () {
           showToast("The track could not start. Refresh and try again.");
         });
       } else {
@@ -498,7 +502,25 @@
       paintSeek();
     });
 
-    var autoPlayEvents = [
+    function unlockAudio(event) {
+      if (playBtn && event && event.target && playBtn.contains(event.target)) {
+        return;
+      }
+      if (audio) {
+        audio.muted = false;
+        setVol(heardVolume(), false);
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume().catch(function () {});
+        }
+        if (audio.paused) {
+          startSong().catch(function () {});
+        } else {
+          showPlaying();
+        }
+      }
+    }
+
+    var gestureEvents = [
       "click",
       "pointerdown",
       "mousedown",
@@ -506,40 +528,34 @@
       "touchend",
       "keydown",
       "scroll",
-      "wheel",
-      "mousemove"
+      "wheel"
     ];
 
-    function cleanAutoPlayListeners() {
-      autoPlayEvents.forEach(function (name) {
-        window.removeEventListener(name, onFirstUserGesture, true);
-        document.removeEventListener(name, onFirstUserGesture, true);
-      });
-    }
-
-    function onFirstUserGesture(event) {
-      if (playBtn && event && event.target && playBtn.contains(event.target)) {
-        cleanAutoPlayListeners();
-        return;
-      }
-      startSong().then(function () {
-        cleanAutoPlayListeners();
-      }).catch(function () {});
-    }
-
-    function attachAutoPlayListeners() {
-      autoPlayEvents.forEach(function (name) {
-        window.addEventListener(name, onFirstUserGesture, { capture: true, passive: true });
-        document.addEventListener(name, onFirstUserGesture, { capture: true, passive: true });
-      });
-    }
+    gestureEvents.forEach(function (name) {
+      window.addEventListener(name, unlockAudio, { passive: true });
+      document.addEventListener(name, unlockAudio, { passive: true });
+    });
 
     function attemptAutoPlay() {
-      startSong().then(function () {
-        cleanAutoPlayListeners();
-      }).catch(function () {
-        attachAutoPlayListeners();
-      });
+      showPlaying();
+      if (!audio) return;
+      audio.muted = false;
+      var p = startSong();
+      if (p && typeof p.then === "function") {
+        p.then(function () {
+          showPlaying();
+        }).catch(function () {
+          // If browser policy prevents unmuted playback without prior interaction,
+          // start playing muted immediately so it is already playing and ready!
+          audio.muted = true;
+          var mp = audio.play();
+          if (mp && typeof mp.then === "function") {
+            mp.then(function () {
+              showPlaying();
+            }).catch(function () {});
+          }
+        });
+      }
     }
 
     attemptAutoPlay();
