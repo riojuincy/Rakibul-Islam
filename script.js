@@ -520,7 +520,9 @@
       "touchend",
       "keydown",
       "scroll",
-      "wheel"
+      "wheel",
+      "mousemove",
+      "pointermove"
     ];
 
     function attachInteractionListeners() {
