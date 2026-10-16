@@ -496,14 +496,20 @@
       audioCtx.resume().catch(function () {});
     }
     setVol(heardVolume(), false);
-    if (!audio.paused) {
-      showPlaying();
-      return Promise.resolve();
-    }
+    audio.muted = false;
+
     var p = audio.play();
     if (p && typeof p.then === "function") {
       return p.then(function () {
         showPlaying();
+      }).catch(function (err) {
+        var onCanPlay = function () {
+          audio.removeEventListener("canplay", onCanPlay);
+          audio.play().then(showPlaying).catch(function () {
+            showPaused();
+          });
+        };
+        audio.addEventListener("canplay", onCanPlay, { once: true });
       });
     }
     showPlaying();
@@ -518,9 +524,9 @@
       trackNameEl.textContent = track.title;
     }
     var targetSrc = track.src;
-    if (!audio.src || !audio.src.endsWith(targetSrc)) {
+    var isNewSrc = !audio.src || !audio.src.endsWith(targetSrc);
+    if (isNewSrc) {
       audio.src = targetSrc;
-      audio.load();
     }
     if (shouldPlay) {
       audio.muted = false;
@@ -529,8 +535,19 @@
     return Promise.resolve();
   }
 
+  var isTrackSwitching = false;
+
   function nextTrack(shouldPlay) {
+    if (isTrackSwitching) return Promise.resolve();
+    isTrackSwitching = true;
+    setTimeout(function () {
+      isTrackSwitching = false;
+    }, 700);
     return loadTrack(currentTrackIndex + 1, shouldPlay !== false);
+  }
+
+  function handleSongEnded() {
+    nextTrack(true);
   }
 
   function playEntrySound() {
@@ -588,6 +605,7 @@
   });
 
   if (audio) {
+    audio.loop = false;
     audio.addEventListener("play", function () {
       setupAudio();
       if (audioCtx && audioCtx.state === "suspended") {
@@ -600,14 +618,19 @@
       showPaused();
     });
     audio.addEventListener("ended", function () {
-      nextTrack(true);
+      handleSongEnded();
+    });
+    audio.addEventListener("error", function () {
+      setTimeout(function () {
+        nextTrack(true);
+      }, 1000);
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener("click", function (e) {
       if (e) e.stopPropagation();
-      nextTrack(!audio.paused || hasEntered);
+      nextTrack(true);
     });
   }
 
@@ -682,6 +705,9 @@
       if (!seeking) {
         paintTime();
         paintSeek();
+      }
+      if (audio.duration && audio.duration > 2 && audio.currentTime >= audio.duration - 0.28 && !isTrackSwitching && !audio.paused) {
+        handleSongEnded();
       }
     });
     audio.addEventListener("loadedmetadata", function () {
