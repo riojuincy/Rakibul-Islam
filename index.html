@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=47" />
+  <link rel="stylesheet" href="styles.css?v=49" />
   <script>
     document.documentElement.classList.add("js");
     try {
@@ -36,19 +36,28 @@
     <div class="enter-backdrop"></div>
     <div class="enter-card">
       <div class="enter-photo-wrap">
+        <div class="enter-ring-outer"></div>
         <div class="enter-photo-glow"></div>
-        <img src="enter.png" alt="Rakibul Islam" class="enter-photo" width="300" height="300" />
+        <div class="enter-photo-inner">
+          <img src="enter.png" alt="Rakibul Islam" class="enter-photo" width="300" height="300" />
+        </div>
       </div>
       <div class="enter-content">
-        <p class="enter-tag"><span class="moon moon-sm" aria-hidden="true"></span>Movie Explainer</p>
+        <div class="enter-badge">
+          <span class="enter-badge-dot" aria-hidden="true"></span>
+          <svg class="enter-badge-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+            <path fill="currentColor" d="M12 2l2.4 6.8L21 11l-5.3 4.4 1.7 7L12 18.6 6.6 22.4l1.7-7L3 11l6.6-2.2z"/>
+          </svg>
+          <span>Movie Explainer</span>
+        </div>
         <h1 class="enter-name">Rakibul Islam</h1>
         <p class="enter-desc">Film explanations · Developer · Poetry</p>
       </div>
       <button id="enter-btn" class="enter-btn" type="button">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
-        <span>Enter Experience</span>
+        <svg class="enter-btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+        <span class="enter-btn-text">Enter Experience</span>
+        <span class="enter-btn-shine" aria-hidden="true"></span>
       </button>
-      <p class="enter-sound-note">🎵 Atmospheric soundtrack enabled</p>
     </div>
   </div>
 
