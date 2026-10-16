@@ -299,7 +299,9 @@
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
   function heardVolume() {
-    return (Number(volume && volume.value) || 24) / 100 * 0.72;
+    var raw = Number(volume && volume.value);
+    if (!isFinite(raw) || raw <= 0) raw = 65;
+    return Math.max(0.05, Math.min(1, raw / 100));
   }
   function setupAudio() {
     if (audioCtx || !audio) return;
@@ -323,26 +325,20 @@
     }
   }
   function setVol(v, fade) {
-    var target = Math.max(0, Math.min(0.72, v));
+    var target = Math.max(0, Math.min(1, v));
     if (gain && audioCtx) {
       try {
         var now = audioCtx.currentTime;
         gain.gain.cancelScheduledValues(now);
-        if (fade && audioCtx.state === "running") {
-          gain.gain.setValueAtTime(gain.gain.value, now);
-          gain.gain.linearRampToValueAtTime(target, now + 0.3);
-        } else {
-          gain.gain.setValueAtTime(target, now);
-          gain.gain.value = target;
-        }
+        gain.gain.setValueAtTime(target, now);
+        gain.gain.value = target;
       } catch (e) {
         try { gain.gain.value = target; } catch (err) {}
       }
     }
     if (audio) {
       try {
-        var nativeVol = (Number(volume && volume.value) || 24) / 100;
-        audio.volume = Math.max(0, Math.min(1, nativeVol));
+        audio.volume = target;
       } catch (e) {}
     }
   }
@@ -436,7 +432,6 @@
       } else {
         audio.pause();
         showPaused();
-        setVol(0, false);
       }
     });
     if (volume) {
@@ -502,25 +497,22 @@
       paintSeek();
     });
 
-    function unlockAudio(event) {
+    function playTrack() {
+      if (!audio) return Promise.reject(new Error("No audio"));
+      audio.muted = false;
+      return startSong();
+    }
+
+    function onFirstPageInteraction(event) {
       if (playBtn && event && event.target && playBtn.contains(event.target)) {
         return;
       }
-      if (audio) {
-        audio.muted = false;
-        setVol(heardVolume(), false);
-        if (audioCtx && audioCtx.state === "suspended") {
-          audioCtx.resume().catch(function () {});
-        }
-        if (audio.paused) {
-          startSong().catch(function () {});
-        } else {
-          showPlaying();
-        }
-      }
+      playTrack().then(function () {
+        removeInteractionListeners();
+      }).catch(function () {});
     }
 
-    var gestureEvents = [
+    var interactionEvents = [
       "click",
       "pointerdown",
       "mousedown",
@@ -531,31 +523,27 @@
       "wheel"
     ];
 
-    gestureEvents.forEach(function (name) {
-      window.addEventListener(name, unlockAudio, { passive: true });
-      document.addEventListener(name, unlockAudio, { passive: true });
-    });
+    function attachInteractionListeners() {
+      interactionEvents.forEach(function (name) {
+        window.addEventListener(name, onFirstPageInteraction, { passive: true });
+        document.addEventListener(name, onFirstPageInteraction, { passive: true });
+      });
+    }
+
+    function removeInteractionListeners() {
+      interactionEvents.forEach(function (name) {
+        window.removeEventListener(name, onFirstPageInteraction, { passive: true });
+        document.removeEventListener(name, onFirstPageInteraction, { passive: true });
+      });
+    }
 
     function attemptAutoPlay() {
-      showPlaying();
-      if (!audio) return;
-      audio.muted = false;
-      var p = startSong();
-      if (p && typeof p.then === "function") {
-        p.then(function () {
-          showPlaying();
-        }).catch(function () {
-          // If browser policy prevents unmuted playback without prior interaction,
-          // start playing muted immediately so it is already playing and ready!
-          audio.muted = true;
-          var mp = audio.play();
-          if (mp && typeof mp.then === "function") {
-            mp.then(function () {
-              showPlaying();
-            }).catch(function () {});
-          }
-        });
-      }
+      playTrack().then(function () {
+        removeInteractionListeners();
+      }).catch(function () {
+        showPaused();
+        attachInteractionListeners();
+      });
     }
 
     attemptAutoPlay();
