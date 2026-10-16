@@ -278,6 +278,10 @@
 
   var audio = document.getElementById("song");
   var playBtn = document.getElementById("play");
+  var nextBtn = document.getElementById("next-song");
+  var trackNameEl = document.getElementById("track-name");
+  var enterOverlay = document.getElementById("enter-overlay");
+  var enterBtn = document.getElementById("enter-btn");
   var volume = document.getElementById("volume");
   var seek = document.getElementById("seek");
   var ptime = document.getElementById("ptime");
@@ -285,12 +289,29 @@
   var orbit = document.getElementById("orbit");
   var viz = document.getElementById("viz");
   var audioCtx = null;
+  var audioSourceNode = null;
   var gain = null;
   var analyser = null;
   var freq = null;
   var bars = [];
   var playMark = '<path d="M8 5.5v13l11-6.5z" fill="currentColor"/>';
   var pauseMark = '<path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z" fill="currentColor"/>';
+  var hasEntered = !enterOverlay;
+
+  var PLAYLIST = [
+    { title: "Song 1", src: "songs/song1.mp3" },
+    { title: "Song 2", src: "songs/song2.mp3" },
+    { title: "Song 3", src: "songs/song3.mp3" },
+    { title: "Song 4", src: "songs/song4.mp3" },
+    { title: "Song 5", src: "songs/song5.mp3" },
+    { title: "Song 6", src: "songs/song6.mp3" },
+    { title: "Song 7", src: "songs/song7.mp3" },
+    { title: "Song 8", src: "songs/song8.mp3" },
+    { title: "Song 9", src: "songs/song9.mp3" },
+    { title: "Song 10", src: "songs/song10.mp3" }
+  ];
+
+  var currentTrackIndex = Math.floor(Math.random() * PLAYLIST.length);
 
   function fmtTime(t) {
     if (!isFinite(t)) t = 0;
@@ -298,32 +319,46 @@
     var s = Math.floor(t % 60);
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
+
   function heardVolume() {
     var raw = Number(volume && volume.value);
     if (!isFinite(raw) || raw <= 0) raw = 65;
     return Math.max(0.05, Math.min(1, raw / 100));
   }
+
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      } catch (err) {}
+    }
+    if (audioCtx && audioCtx.state === "suspended") {
+      audioCtx.resume().catch(function () {});
+    }
+    return audioCtx;
+  }
+
   function setupAudio() {
-    if (audioCtx || !audio) return;
+    if (!audio) return;
+    ensureAudioContext();
+    if (!audioCtx || audioSourceNode) return;
     try {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      audioCtx = new AC();
-      var src = audioCtx.createMediaElementSource(audio);
+      audioSourceNode = audioCtx.createMediaElementSource(audio);
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
       analyser.smoothingTimeConstant = 0.5;
       gain = audioCtx.createGain();
       gain.gain.value = heardVolume();
-      src.connect(analyser);
+      audioSourceNode.connect(analyser);
       analyser.connect(gain);
       gain.connect(audioCtx.destination);
       freq = new Uint8Array(analyser.frequencyBinCount);
     } catch (err) {
-      audioCtx = null;
-      gain = null;
+      audioSourceNode = null;
     }
   }
+
   function setVol(v, fade) {
     var target = Math.max(0, Math.min(1, v));
     if (gain && audioCtx) {
@@ -342,6 +377,7 @@
       } catch (e) {}
     }
   }
+
   function buildBars() {
     if (!viz) return;
     viz.textContent = "";
@@ -355,6 +391,7 @@
     }
     placeBars();
   }
+
   function placeBars() {
     if (!viz || !bars.length) return;
     var r = viz.clientWidth / 2 + 6;
@@ -375,6 +412,7 @@
       if (icon) icon.innerHTML = pauseMark;
     }
   }
+
   function showPaused() {
     if (orbit) orbit.classList.remove("playing");
     if (player) player.classList.remove("on");
@@ -384,6 +422,7 @@
       if (iconOff) iconOff.innerHTML = playMark;
     }
   }
+
   function startSong() {
     if (!audio) return Promise.reject(new Error("No audio"));
     setupAudio();
@@ -405,6 +444,83 @@
     return Promise.resolve();
   }
 
+  function loadTrack(index, shouldPlay) {
+    if (!audio || !PLAYLIST.length) return Promise.reject(new Error("No audio"));
+    currentTrackIndex = ((index % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
+    var track = PLAYLIST[currentTrackIndex];
+    if (trackNameEl) {
+      trackNameEl.textContent = track.title;
+    }
+    var targetSrc = track.src;
+    if (!audio.src || !audio.src.endsWith(targetSrc)) {
+      audio.src = targetSrc;
+      audio.load();
+    }
+    if (shouldPlay) {
+      audio.muted = false;
+      return startSong();
+    }
+    return Promise.resolve();
+  }
+
+  function nextTrack(shouldPlay) {
+    return loadTrack(currentTrackIndex + 1, shouldPlay !== false);
+  }
+
+  function playEntrySound() {
+    try {
+      var ctx = ensureAudioContext();
+      if (!ctx) return;
+      var now = ctx.currentTime;
+      var notes = [523.25, 659.25, 783.99, 987.77, 1174.66];
+      notes.forEach(function (f, i) {
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(f, now + i * 0.08);
+        g.gain.setValueAtTime(0.0001, now + i * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.15 / (i + 1), now + i * 0.08 + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 1.8);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 1.9);
+      });
+    } catch (e) {}
+  }
+
+  function doEnter() {
+    if (hasEntered) return;
+    hasEntered = true;
+    playEntrySound();
+    if (enterOverlay) {
+      enterOverlay.classList.add("hide");
+      setTimeout(function () {
+        enterOverlay.style.display = "none";
+      }, 950);
+    }
+    loadTrack(currentTrackIndex, true).catch(function () {});
+  }
+
+  if (enterBtn) {
+    enterBtn.addEventListener("click", function (e) {
+      if (e) e.stopPropagation();
+      doEnter();
+    });
+  }
+
+  if (enterOverlay) {
+    enterOverlay.addEventListener("click", function (e) {
+      doEnter();
+    });
+  }
+
+  window.addEventListener("keydown", function (e) {
+    if (!hasEntered && (e.key === "Enter" || e.code === "Enter" || e.code === "Space")) {
+      doEnter();
+    }
+  });
+
   if (audio) {
     audio.addEventListener("play", function () {
       setupAudio();
@@ -416,6 +532,16 @@
     });
     audio.addEventListener("pause", function () {
       showPaused();
+    });
+    audio.addEventListener("ended", function () {
+      nextTrack(true);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", function (e) {
+      if (e) e.stopPropagation();
+      nextTrack(!audio.paused || hasEntered);
     });
   }
 
@@ -497,63 +623,7 @@
       paintSeek();
     });
 
-    function playTrack() {
-      if (!audio) return Promise.reject(new Error("No audio"));
-      audio.muted = false;
-      return startSong();
-    }
-
-    function onFirstPageInteraction(event) {
-      if (playBtn && event && event.target && playBtn.contains(event.target)) {
-        return;
-      }
-      playTrack().then(function () {
-        removeInteractionListeners();
-      }).catch(function () {});
-    }
-
-    var interactionEvents = [
-      "click",
-      "pointerdown",
-      "mousedown",
-      "touchstart",
-      "touchend",
-      "keydown",
-      "scroll",
-      "wheel",
-      "mousemove",
-      "pointermove"
-    ];
-
-    function attachInteractionListeners() {
-      interactionEvents.forEach(function (name) {
-        window.addEventListener(name, onFirstPageInteraction, { passive: true });
-        document.addEventListener(name, onFirstPageInteraction, { passive: true });
-      });
-    }
-
-    function removeInteractionListeners() {
-      interactionEvents.forEach(function (name) {
-        window.removeEventListener(name, onFirstPageInteraction, { passive: true });
-        document.removeEventListener(name, onFirstPageInteraction, { passive: true });
-      });
-    }
-
-    function attemptAutoPlay() {
-      playTrack().then(function () {
-        removeInteractionListeners();
-      }).catch(function () {
-        showPaused();
-        attachInteractionListeners();
-      });
-    }
-
-    attemptAutoPlay();
-    if (document.readyState === "complete") {
-      attemptAutoPlay();
-    } else {
-      window.addEventListener("load", attemptAutoPlay, { once: true });
-    }
+    loadTrack(currentTrackIndex, false);
   }
 
   var wave = [];

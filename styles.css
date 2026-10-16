@@ -1959,3 +1959,199 @@ html[data-theme="night"] .seek input::-moz-range-track {
 html[data-theme="night"] ::placeholder { color: #a39888; }
 html[data-theme="night"] .net.eth-net { color: #b9d2ff; }
 html[data-theme="night"] .net.usdt-net { color: #8ee0b8; }
+
+/* ENTER SCREEN OVERLAY */
+.enter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 36%, rgba(26, 20, 14, 0.96), rgba(8, 10, 16, 0.99) 70%);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  padding: 24px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.85s;
+}
+
+.enter-overlay.hide {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.enter-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(480px circle at 50% 36%, rgba(246, 215, 138, 0.22), transparent 60%),
+    radial-gradient(700px circle at 80% 80%, rgba(122, 104, 224, 0.12), transparent 70%);
+  animation: enterAurora 12s ease-in-out infinite alternate;
+}
+
+@keyframes enterAurora {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+  100% { transform: scale(1.15) translate(-20px, 15px); opacity: 1; }
+}
+
+.enter-card {
+  position: relative;
+  z-index: 2;
+  max-width: 440px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: enterCardIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes enterCardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.enter-photo-wrap {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  margin-bottom: 22px;
+}
+
+.enter-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  border: 3px solid rgba(231, 197, 106, 0.65);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  animation: enterPhotoFloat 5s ease-in-out infinite alternate;
+}
+
+@keyframes enterPhotoFloat {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-7px) scale(1.02); }
+}
+
+.enter-photo-glow {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(231, 197, 106, 0.45), transparent 70%);
+  z-index: 1;
+  animation: enterGlowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes enterGlowPulse {
+  0% { transform: scale(0.92); opacity: 0.5; }
+  100% { transform: scale(1.16); opacity: 1; }
+}
+
+.enter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #e7c56a;
+  margin: 0 0 10px;
+  background: rgba(231, 197, 106, 0.12);
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 197, 106, 0.28);
+}
+
+.enter-name {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 560;
+  letter-spacing: -0.025em;
+  color: #fff9e6;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 18px rgba(231, 197, 106, 0.25);
+}
+
+.enter-desc {
+  font-size: 0.95rem;
+  color: rgba(232, 226, 214, 0.72);
+  margin: 0 0 26px;
+  line-height: 1.5;
+}
+
+.enter-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 235, 179, 0.6);
+  background: linear-gradient(135deg, #fce08a 0%, #d49c2a 100%);
+  color: #1a1205;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(212, 156, 42, 0.45), 0 0 0 0 rgba(231, 197, 106, 0.5);
+  animation: enterBtnPulse 2.4s ease-in-out infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+@keyframes enterBtnPulse {
+  0%, 100% { box-shadow: 0 8px 30px rgba(212, 156, 42, 0.45), 0 0 0 0 rgba(231, 197, 106, 0.4); }
+  60% { box-shadow: 0 8px 36px rgba(212, 156, 42, 0.65), 0 0 0 14px rgba(231, 197, 106, 0); }
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: brightness(1.08);
+}
+
+.enter-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.enter-sound-note {
+  margin-top: 14px;
+  font-size: 0.78rem;
+  color: rgba(232, 226, 214, 0.5);
+  letter-spacing: 0.03em;
+}
+
+/* SKIP / NEXT SONG BUTTON IN NAV PLAYER */
+.skip-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(243, 230, 192, 0.1);
+  color: var(--moon);
+  display: grid;
+  place-items: center;
+  flex: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.skip-btn:hover {
+  transform: scale(1.12);
+  background: rgba(243, 230, 192, 0.26);
+  color: var(--ink);
+}
+
+.skip-btn:active {
+  transform: scale(0.92);
+}
+
