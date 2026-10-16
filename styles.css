@@ -1649,30 +1649,35 @@ section[id],
   .nav-links a { padding: 14px 12px; font-size: 1rem; }
   .hero-panel {
     grid-template-columns: 1fr;
-    gap: 26px;
+    gap: 24px;
     padding: 30px 22px;
     text-align: center;
   }
   .hero-side {
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
     margin: 0 auto;
     width: 100%;
-    justify-items: center;
   }
   .portrait-orbit {
     width: min(210px, 58vw);
-    margin: 0 auto;
+    margin: 0 auto 36px;
   }
   .yt-row {
     width: auto;
     max-width: 280px;
     margin: 0 auto;
     justify-content: center;
-    gap: 10px;
+    gap: 0;
+  }
+  .yt-row .moon {
+    display: none;
   }
   .yt-row .btn {
     flex: initial;
-    padding: 0.8rem 1.6rem;
+    padding: 0.82rem 1.7rem;
   }
   .hero-copy {
     display: flex;
@@ -1832,11 +1837,20 @@ section[id],
   .hero-panel {
     padding: 24px 16px 22px;
     border-radius: 28px;
-    gap: 18px;
+    gap: 22px;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
   }
+  .hero-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 0 auto;
+    width: 100%;
+  }
   .portrait-orbit {
-    width: min(195px, 56vw);
+    width: min(190px, 54vw);
+    margin: 0 auto 38px;
   }
   h1 {
     margin: 0 0 10px;
@@ -1870,16 +1884,21 @@ section[id],
   }
   .yt-row {
     width: auto;
-    max-width: 250px;
-    gap: 8px;
+    max-width: 260px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
   }
   .yt-row .moon {
-    width: 30px;
-    height: 30px;
+    display: none;
   }
   .btn.btn-yt {
-    font-size: 0.9rem;
-    padding: 0.72rem 1.35rem;
+    font-size: 0.92rem;
+    font-weight: 650;
+    padding: 0.82rem 1.6rem;
+    box-shadow: 0 10px 24px rgba(225, 0, 44, 0.35);
   }
   .actions {
     display: flex;
@@ -1969,7 +1988,7 @@ section[id],
 
 @media (max-width: 380px) {
   .hero-panel { padding: 20px 14px; }
-  .portrait-orbit { width: 175px; }
+  .portrait-orbit { width: 175px; margin: 0 auto 34px; }
   h1 .first,
   h1 .last { font-size: 1.7rem; }
   .actions { flex-direction: column; width: 100%; }
