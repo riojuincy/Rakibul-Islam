@@ -845,19 +845,20 @@
   }
 
   function burst(x, y) {
-    for (var i = 0; i < 7; i += 1) {
+    for (var i = 0; i < 4; i += 1) {
       var angle = Math.random() * Math.PI * 2;
-      var speed = Math.random() * 1.6 + 0.3;
+      var speed = Math.random() * 1.5 + 0.35;
       sparks.push({
         x: x,
         y: y,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.5,
+        vy: Math.sin(angle) * speed - 0.45,
         life: 1,
-        r: Math.random() * 1.8 + 0.5
+        r: Math.random() * 1.9 + 0.6,
+        gold: Math.random() > 0.3
       });
     }
-    if (sparks.length > 120) sparks.splice(0, sparks.length - 120);
+    if (sparks.length > 180) sparks.splice(0, sparks.length - 180);
   }
 
   function drawSpark(x, y, r, alpha, gold) {
@@ -907,7 +908,7 @@
       spark.y += spark.vy;
       spark.vy += 0.02;
       spark.life *= 0.96;
-      drawSpark(spark.x, spark.y, spark.r, spark.life, true);
+      drawSpark(spark.x, spark.y, spark.r, spark.life, spark.gold !== undefined ? spark.gold : true);
       if (spark.life < 0.05) sparks.splice(s, 1);
     }
   }
@@ -954,10 +955,28 @@
     mx = event.clientX;
     my = event.clientY;
     moved += travel;
-    if (moved > 18) {
+    if (moved > 16) {
       burst(mx, my);
       moved = 0;
     }
+  });
+
+  window.addEventListener("pointerdown", function (event) {
+    if (event.clientX == null || event.clientY == null) return;
+    for (var i = 0; i < 16; i += 1) {
+      var angle = (i / 16) * Math.PI * 2 + (Math.random() * 0.3);
+      var speed = Math.random() * 2.8 + 1.2;
+      sparks.push({
+        x: event.clientX,
+        y: event.clientY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 0.2,
+        life: 1.15,
+        r: Math.random() * 2.2 + 1.2,
+        gold: Math.random() > 0.25
+      });
+    }
+    if (sparks.length > 180) sparks.splice(0, sparks.length - 180);
   });
 
   window.addEventListener("mouseleave", function () {

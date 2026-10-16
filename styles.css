@@ -2236,3 +2236,204 @@ html[data-theme="night"] .net.usdt-net { color: #8ee0b8; }
   transform: scale(0.92);
 }
 
+/* ==========================================================================
+   ADVANCED CINEMATIC ANIMATIONS & INTERACTIVE VISUAL POLISH
+   ========================================================================== */
+
+/* 1. INTERACTIVE CARD & SPOTLIGHT DYNAMICS */
+.card,
+.wallet,
+.form-card,
+.note,
+.langs li,
+.social,
+.quote {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+}
+
+.card:hover,
+.wallet:hover,
+.note:hover,
+.langs li:hover,
+.social:hover {
+  transform: translateY(-5px) scale(1.012);
+  box-shadow: 0 20px 48px rgba(40, 30, 16, 0.12), 0 0 24px rgba(231, 197, 106, 0.22);
+  border-color: rgba(231, 197, 106, 0.45);
+}
+
+html[data-theme="night"] .card:hover,
+html[data-theme="night"] .wallet:hover,
+html[data-theme="night"] .note:hover,
+html[data-theme="night"] .langs li:hover,
+html[data-theme="night"] .social:hover {
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.72), 0 0 32px rgba(228, 197, 106, 0.28);
+  border-color: rgba(228, 197, 106, 0.6);
+}
+
+/* 2. LUXURY SHIMMERING HEADINGS */
+.hero h1 .first {
+  background: linear-gradient(135deg, var(--ink) 0%, #b8860b 45%, var(--ink) 90%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroTextGleam 6s ease-in-out infinite alternate;
+}
+
+html[data-theme="night"] .hero h1 .first {
+  background: linear-gradient(135deg, #ffffff 0%, #fce08a 45%, #ffffff 90%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroTextGleam 6s ease-in-out infinite alternate;
+}
+
+.hero h1 .last {
+  background: linear-gradient(135deg, #d49c2a 0%, #ffeaa7 50%, #b8860b 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heroTextGleam 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes heroTextGleam {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* 3. RADAR PING STATUS */
+.status i {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ddc6e;
+  box-shadow: 0 0 10px #3ddc6e;
+}
+
+.status i::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid #3ddc6e;
+  animation: statusRadar 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes statusRadar {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* 4. SOUND-REACTIVE VISUALIZER SPECTRUM & DUAL ORBIT */
+.portrait-orbit.playing .viz b {
+  opacity: 0.95;
+  background: linear-gradient(180deg, #fff7cc 0%, #f6d88b 50%, #c4922a 100%);
+  box-shadow: 0 0 12px rgba(246, 216, 139, 0.8), 0 0 4px #fff;
+}
+
+html[data-theme="night"] .portrait-orbit.playing .viz b {
+  background: linear-gradient(180deg, #ffffff 0%, #fce08a 55%, #e4c56a 100%);
+  box-shadow: 0 0 14px rgba(252, 224, 138, 0.95), 0 0 6px #fff;
+}
+
+.portrait-orbit.playing::after {
+  content: "";
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  border: 1px dashed rgba(228, 197, 106, 0.35);
+  animation: orbitCounter 14s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes orbitCounter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* 5. WALLET COIN HOVER DYNAMICS */
+.w-ico {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+.wallet:hover .w-ico.btc {
+  transform: rotate(14deg) scale(1.15);
+  box-shadow: 0 0 24px rgba(247, 147, 26, 0.6);
+}
+.wallet:hover .w-ico.eth {
+  transform: translateY(-5px) scale(1.15);
+  box-shadow: 0 0 24px rgba(98, 126, 234, 0.6);
+}
+.wallet:hover .w-ico.usdt {
+  transform: scale(1.18);
+  box-shadow: 0 0 24px rgba(38, 161, 123, 0.6);
+}
+
+.wallet .copy {
+  transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+.wallet .copy:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(228, 197, 106, 0.4);
+}
+.wallet .copy:active {
+  transform: scale(0.92);
+}
+
+/* 6. INTERACTIVE BUTTON HOVER PARTICLES & BOUNCES */
+.btn {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+.btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.05);
+}
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.btn-primary:hover {
+  box-shadow: 0 16px 36px rgba(243, 230, 192, 0.45);
+}
+
+/* 7. GLOWING INPUTS & FORM CARD */
+input, textarea {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+input:focus, textarea:focus {
+  border-color: var(--moon);
+  box-shadow: 0 0 0 3.5px rgba(228, 197, 106, 0.25), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+html[data-theme="night"] input:focus,
+html[data-theme="night"] textarea:focus {
+  border-color: #fce08a;
+  box-shadow: 0 0 0 3.5px rgba(252, 224, 138, 0.28), 0 8px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* 8. CELESTIAL SHOOTING METEORS GLOW */
+.meteors span {
+  box-shadow: 0 0 8px rgba(243, 230, 192, 0.6);
+}
+
+/* 9. SMOOTH CINEMATIC SCROLL REVEAL */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px) scale(0.985); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* 10. SOCIAL MEDIA HOVER GLINT */
+.social:hover .ico {
+  transform: scale(1.12) rotate(4deg);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+}
+
+/* 11. AUDIO PLAYER PULSE ON PLAYING */
+.player.on {
+  border-color: rgba(228, 197, 106, 0.4);
+  box-shadow: 0 10px 32px rgba(228, 197, 106, 0.22);
+}
+.player.on .player-eq i {
+  background: #e4c56a;
+}
+
