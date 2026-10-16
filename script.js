@@ -448,7 +448,8 @@
     if (!viz) return;
     viz.textContent = "";
     bars = [];
-    for (var i = 0; i < 64; i += 1) {
+    var count = (window.innerWidth <= 768) ? 36 : 60;
+    for (var i = 0; i < count; i += 1) {
       var arm = document.createElement("i");
       var bar = document.createElement("b");
       arm.appendChild(bar);
@@ -719,9 +720,11 @@
   }
 
   var wave = [];
+  var vizCleared = false;
   function paintViz() {
     var playing = orbit && orbit.classList.contains("playing") && analyser && freq;
     if (playing) {
+      vizCleared = false;
       analyser.getByteFrequencyData(freq);
       var bass = Math.pow(freq[2] / 255, 0.7);
       orbit.style.transform = "scale(" + (1 + bass * 0.045).toFixed(3) + ")";
@@ -733,10 +736,11 @@
         var level = Math.pow(Math.min(1, bin * 0.6 + prev * 0.22 + next * 0.18), 0.55);
         var last = wave[i] || 0;
         wave[i] = level >= last ? last * 0.18 + level * 0.82 : last * 0.72 + level * 0.28;
-        if (arm.firstChild) arm.firstChild.style.height = (4 + wave[i] * 26).toFixed(1) + "px";
+        if (arm.firstChild) arm.firstChild.style.height = (4 + wave[i] * 24).toFixed(1) + "px";
       });
-    } else if (orbit) {
-      orbit.style.transform = "";
+    } else if (!vizCleared) {
+      vizCleared = true;
+      if (orbit) orbit.style.transform = "";
       bars.forEach(function (arm, i) {
         wave[i] = 0;
         if (arm.firstChild) arm.firstChild.style.height = "0px";
@@ -762,6 +766,7 @@
   var rw = 0;
   var rh = 0;
   var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var isMobile = !fine || (window.innerWidth <= 768);
   var stars = [];
   var sparks = [];
   var w = 0;
@@ -769,17 +774,20 @@
   var mx = window.innerWidth * 0.72;
   var my = window.innerHeight * 0.22;
   var moved = 0;
+  var coordsDirty = true;
   var parts = document.querySelectorAll(".portrait, .social, .card, .langs li, .note, .quote, .form-card, .btn, .wallet");
 
   function resize() {
+    isMobile = !fine || (window.innerWidth <= 768);
     if (!canvas || !ctx) return;
     w = window.innerWidth;
     h = window.innerHeight;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 2);
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var count = Math.max(42, Math.min(110, Math.floor(w / 14)));
+
+    var count = isMobile ? Math.max(16, Math.min(26, Math.floor(w / 18))) : Math.max(42, Math.min(100, Math.floor(w / 14)));
     stars = [];
     for (var i = 0; i < count; i += 1) stars.push(makeStar(true));
     resizeRain();
@@ -789,20 +797,21 @@
     if (!rainCanvas || !rctx) return;
     rw = window.innerWidth;
     rh = window.innerHeight;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 2);
     rainCanvas.width = Math.floor(rw * dpr);
     rainCanvas.height = Math.floor(rh * dpr);
     rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var count = Math.max(34, Math.min(86, Math.floor(rw / 18)));
+
+    var count = isMobile ? Math.max(12, Math.min(20, Math.floor(rw / 24))) : Math.max(34, Math.min(75, Math.floor(rw / 18)));
     drops = [];
     for (var i = 0; i < count; i += 1) {
       drops.push({
         x: Math.random() * rw,
         y: Math.random() * rh,
-        len: 16 + Math.random() * 24,
-        vy: 9 + Math.random() * 11,
-        vx: -2.1 - Math.random(),
-        o: 0.14 + Math.random() * 0.28
+        len: isMobile ? 12 + Math.random() * 16 : 16 + Math.random() * 24,
+        vy: isMobile ? 7 + Math.random() * 7 : 9 + Math.random() * 11,
+        vx: -1.6 - Math.random() * 0.8,
+        o: isMobile ? 0.12 + Math.random() * 0.2 : 0.14 + Math.random() * 0.28
       });
     }
   }
@@ -810,7 +819,7 @@
   function paintRain() {
     if (!rctx) return;
     rctx.clearRect(0, 0, rw, rh);
-    rctx.lineWidth = 1.15;
+    rctx.lineWidth = isMobile ? 1 : 1.15;
     for (var i = 0; i < drops.length; i += 1) {
       var drop = drops[i];
       drop.x += drop.vx;
@@ -845,9 +854,11 @@
   }
 
   function burst(x, y) {
-    for (var i = 0; i < 4; i += 1) {
+    var maxSparks = isMobile ? 40 : 180;
+    var burstCount = isMobile ? 2 : 4;
+    for (var i = 0; i < burstCount; i += 1) {
       var angle = Math.random() * Math.PI * 2;
-      var speed = Math.random() * 1.5 + 0.35;
+      var speed = Math.random() * 1.4 + 0.35;
       sparks.push({
         x: x,
         y: y,
@@ -858,15 +869,18 @@
         gold: Math.random() > 0.3
       });
     }
-    if (sparks.length > 180) sparks.splice(0, sparks.length - 180);
+    if (sparks.length > maxSparks) sparks.splice(0, sparks.length - maxSparks);
   }
 
   function drawSpark(x, y, r, alpha, gold) {
+    if (alpha <= 0.02) return;
     ctx.save();
     ctx.translate(x, y);
     ctx.globalAlpha = alpha;
-    ctx.shadowColor = gold ? "rgba(243, 224, 170, 0.7)" : "rgba(226, 232, 245, 0.55)";
-    ctx.shadowBlur = 10;
+    if (!isMobile) {
+      ctx.shadowColor = gold ? "rgba(243, 224, 170, 0.7)" : "rgba(226, 232, 245, 0.55)";
+      ctx.shadowBlur = 8;
+    }
     var night = document.documentElement.getAttribute("data-theme") === "night";
     ctx.fillStyle = night ? (gold ? "#f3e6c0" : "#f7f4ee") : (gold ? "#c4a15a" : "#d9d3c8");
     ctx.beginPath();
@@ -887,9 +901,9 @@
       var dx = star.x - mx;
       var dy = star.y - my;
       var dist = Math.hypot(dx, dy) || 1;
-      if (dist < 150) {
-        star.x += (dx / dist) * 0.85;
-        star.y += (dy / dist) * 0.45;
+      if (dist < 140) {
+        star.x += (dx / dist) * 0.75;
+        star.y += (dy / dist) * 0.35;
       }
       star.y += star.s;
       star.x += star.drift + Math.sin(star.spin) * 0.2;
@@ -914,12 +928,15 @@
   }
 
   function follow() {
-    root.style.setProperty("--mx", mx + "px");
-    root.style.setProperty("--my", my + "px");
-    root.style.setProperty("--bx", (8 + (mx / Math.max(w, 1)) * 30) + "%");
-    root.style.setProperty("--by", ((my / Math.max(h, 1)) * 24 - 8) + "%");
-    root.style.setProperty("--bx2", (70 + (mx / Math.max(w, 1)) * 30) + "%");
-    root.style.setProperty("--by2", ((my / Math.max(h, 1)) * 20 - 6) + "%");
+    if (coordsDirty) {
+      coordsDirty = false;
+      root.style.setProperty("--mx", mx + "px");
+      root.style.setProperty("--my", my + "px");
+      root.style.setProperty("--bx", (8 + (mx / Math.max(w, 1)) * 30) + "%");
+      root.style.setProperty("--by", ((my / Math.max(h, 1)) * 24 - 8) + "%");
+      root.style.setProperty("--bx2", (70 + (mx / Math.max(w, 1)) * 30) + "%");
+      root.style.setProperty("--by2", ((my / Math.max(h, 1)) * 20 - 6) + "%");
+    }
 
     if (!fine) return;
     parts.forEach(function (el) {
@@ -954,6 +971,7 @@
     var travel = Math.hypot(event.clientX - mx, event.clientY - my);
     mx = event.clientX;
     my = event.clientY;
+    coordsDirty = true;
     moved += travel;
     if (moved > 16) {
       burst(mx, my);
@@ -963,20 +981,22 @@
 
   window.addEventListener("pointerdown", function (event) {
     if (event.clientX == null || event.clientY == null) return;
-    for (var i = 0; i < 16; i += 1) {
-      var angle = (i / 16) * Math.PI * 2 + (Math.random() * 0.3);
-      var speed = Math.random() * 2.8 + 1.2;
+    var maxSparks = isMobile ? 40 : 180;
+    var sparkCount = isMobile ? 6 : 14;
+    for (var i = 0; i < sparkCount; i += 1) {
+      var angle = (i / sparkCount) * Math.PI * 2 + (Math.random() * 0.3);
+      var speed = Math.random() * (isMobile ? 1.8 : 2.6) + 1;
       sparks.push({
         x: event.clientX,
         y: event.clientY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 0.2,
         life: 1.15,
-        r: Math.random() * 2.2 + 1.2,
+        r: Math.random() * (isMobile ? 1.6 : 2.2) + 1,
         gold: Math.random() > 0.25
       });
     }
-    if (sparks.length > 180) sparks.splice(0, sparks.length - 180);
+    if (sparks.length > maxSparks) sparks.splice(0, sparks.length - maxSparks);
   });
 
   window.addEventListener("mouseleave", function () {

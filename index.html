@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=50" />
+  <link rel="stylesheet" href="styles.css?v=52" />
   <script>
     document.documentElement.classList.add("js");
     try {
@@ -36,8 +36,13 @@
     <div class="enter-backdrop"></div>
     <div class="enter-card">
       <div class="enter-photo-wrap">
-        <div class="enter-ring-outer"></div>
-        <div class="enter-photo-glow"></div>
+        <div class="enter-pulse-wave" aria-hidden="true"></div>
+        <div class="enter-crown-flare" aria-hidden="true"></div>
+        <div class="enter-ring-outer" aria-hidden="true"></div>
+        <div class="enter-ring-counter" aria-hidden="true"></div>
+        <div class="enter-orbit-satellite" aria-hidden="true"><span class="sat-dot"></span></div>
+        <div class="enter-orbit-satellite rev" aria-hidden="true"><span class="sat-dot"></span></div>
+        <div class="enter-photo-glow" aria-hidden="true"></div>
         <div class="enter-photo-inner">
           <img src="enter.png" alt="Rakibul Islam" class="enter-photo" width="300" height="300" />
         </div>
@@ -51,7 +56,7 @@
           <span>Movie Explainer</span>
         </div>
         <h1 class="enter-name">Rakibul Islam</h1>
-        <p class="enter-desc">Film explanations · Developer · Poetry</p>
+        <p class="enter-desc">Film explanations ✦ Developer ✦ Poetry</p>
       </div>
       <button id="enter-btn" class="enter-btn" type="button">
         <svg class="enter-btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
@@ -126,10 +131,6 @@
           </div>
         </div>
         <div class="hero-copy">
-          <div class="hero-meta">
-            <p class="pill pill-yt"><span class="moon moon-sm" aria-hidden="true"></span>Movie Explainer</p>
-            <p class="status"><i aria-hidden="true"></i> online</p>
-          </div>
           <h1 aria-label="Rakibul Islam"><span class="first">Rakibul</span><span class="name-dot" aria-hidden="true"></span><span class="last">Islam</span></h1>
           <ul class="roles">
             <li>
@@ -419,6 +420,6 @@
   <div id="toast" role="status" aria-live="polite"></div>
   <div class="clock" id="clock">00:00:00</div>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=26"></script>
 </body>
 </html>
