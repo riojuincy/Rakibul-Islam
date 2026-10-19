@@ -4,9 +4,11 @@
   var COPY = {
     sent: "Thank you for your message! Rakibul Islam has received your note.",
     need: "Please add your name and a short note.",
-    fail: "The note could not be sent from here. Your email app will open instead.",
-    activate: "Check riojuincy@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
+    fail: "The note could not be sent. Your email app will open instead."
   };
+
+  // Google Sheets Web App URL (Google Apps Script)
+  var GOOGLE_SCRIPT_URL = "";
 
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
@@ -143,45 +145,14 @@
       var name = String(data.get("name") || "").trim();
       var email = String(data.get("email") || "").trim();
       var message = String(data.get("message") || "").trim();
-      var honey = String(data.get("_honey") || "").trim();
       var button = form.querySelector("button[type=submit]") || form.querySelector("button");
-      if (honey) return;
       if (!name || !message) {
         showToast(COPY.need);
         return;
       }
       if (button) button.disabled = true;
-      var payload = {
-        name: name,
-        message: message,
-        _subject: "A note for Rakibul Islam",
-        _template: "box",
-        _captcha: "false",
-        _honey: ""
-      };
-      if (email) {
-        payload.email = email;
-        payload._replyto = email;
-      }
-      fetch("https://formsubmit.co/ajax/riojuincy@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload)
-      }).then(function (res) {
-        return res.text().then(function (text) {
-          var data = {};
-          try { data = JSON.parse(text); } catch (err) { data = {}; }
-          return { ok: res.ok, data: data };
-        });
-      }).then(function (result) {
-        var data = result.data || {};
-        var note = String(data.message || "");
-        var ok = String(data.success) === "true";
-        if (/activat/i.test(note)) {
-          showToast(COPY.activate);
-          return;
-        }
-        if (!result.ok || !ok) throw new Error(note || "send");
+
+      function onSuccess() {
         showToast(COPY.sent);
         form.reset();
         var sent = document.getElementById("sent-note");
@@ -189,12 +160,33 @@
           form.hidden = true;
           sent.hidden = false;
         }
-      }).catch(function () {
-        showToast(COPY.fail);
+      }
+
+      if (GOOGLE_SCRIPT_URL) {
+        var formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("message", message);
+        formData.append("date", new Date().toLocaleString());
+
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors"
+        }).then(function () {
+          onSuccess();
+        }).catch(function () {
+          showToast(COPY.fail);
+          openMail(name, email, message);
+        }).then(function () {
+          if (button) button.disabled = false;
+        });
+      } else {
+        // Fallback when Google Sheet URL is not set yet
+        onSuccess();
         openMail(name, email, message);
-      }).then(function () {
         if (button) button.disabled = false;
-      });
+      }
     });
   }
 
