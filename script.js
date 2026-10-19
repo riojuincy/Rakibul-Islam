@@ -5,7 +5,7 @@
     sent: "Sent. The note is on its way to Rakibul Islam.",
     need: "Please add your name and a short note.",
     fail: "The note could not be sent from here. Your email app will open instead.",
-    activate: "Check riojuincy@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
+    activate: "Check rio@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
   };
 
   var year = document.getElementById("year");
