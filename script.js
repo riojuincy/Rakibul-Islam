@@ -8,7 +8,7 @@
   };
 
   // Google Sheets Web App URL (Google Apps Script)
-  var GOOGLE_SCRIPT_URL = "";
+  var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpfFsuziDTWEVqbubQt9q-NY5Ux8WH_uUmw-lGE_J2IE7qVTknhSPhlKRkR3qG6OGA/exec";
 
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
@@ -163,15 +163,16 @@
       }
 
       if (GOOGLE_SCRIPT_URL) {
-        var formData = new FormData();
-        formData.append("name", name);
-        formData.append("email", email);
-        formData.append("message", message);
-        formData.append("date", new Date().toLocaleString());
+        var params = new URLSearchParams();
+        params.append("name", name);
+        params.append("email", email);
+        params.append("message", message);
+        params.append("date", new Date().toLocaleString());
 
         fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
-          body: formData,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
           mode: "no-cors"
         }).then(function () {
           onSuccess();
