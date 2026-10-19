@@ -2,7 +2,7 @@
   "use strict";
 
   var COPY = {
-    sent: "Sent. The note is on its way to Rakibul Islam.",
+    sent: "Thank you for your message! Rakibul Islam has received your note.",
     need: "Please add your name and a short note.",
     fail: "The note could not be sent from here. Your email app will open instead.",
     activate: "Check rio@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
@@ -33,14 +33,8 @@
       var saved = localStorage.getItem(key);
       if (saved === "night") {
         document.documentElement.setAttribute("data-theme", "night");
-      } else if (saved === "day") {
-        document.documentElement.removeAttribute("data-theme");
       } else {
-        if (isPhoneDevice()) {
-          document.documentElement.setAttribute("data-theme", "night");
-        } else {
-          document.documentElement.removeAttribute("data-theme");
-        }
+        document.documentElement.removeAttribute("data-theme");
       }
     } catch (e) {}
   }
@@ -80,14 +74,8 @@
       try { saved = localStorage.getItem(key); } catch (err) {}
       if (saved === "night") {
         document.documentElement.setAttribute("data-theme", "night");
-      } else if (saved === "day") {
-        document.documentElement.removeAttribute("data-theme");
       } else {
-        if (e.matches) {
-          document.documentElement.setAttribute("data-theme", "night");
-        } else {
-          document.documentElement.removeAttribute("data-theme");
-        }
+        document.documentElement.removeAttribute("data-theme");
       }
       syncTheme();
     };

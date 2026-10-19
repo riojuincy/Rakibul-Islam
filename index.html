@@ -13,14 +13,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=54" />
+  <link rel="stylesheet" href="styles.css?v=55" />
   <script>
     document.documentElement.classList.add("js");
     try {
       var isMobile = window.matchMedia("(max-width: 768px)").matches || /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       var key = isMobile ? "theme_mobile" : "theme_desktop";
       var saved = localStorage.getItem(key);
-      var isNight = saved === "night" || (!saved && isMobile);
+      var isNight = saved === "night";
       if (isNight) {
         document.documentElement.setAttribute("data-theme", "night");
         var meta = document.querySelector('meta[name="theme-color"]');
@@ -377,10 +377,10 @@
           <p class="lead">A film to explain, a website to build, a game, or a poem. Write the note here. It is sent to Rakibul Islam at riojuincy@gmail.com. Add your email if you would like a reply.</p>
         </div>
         <div id="sent-note" class="form-card sent" hidden>
-          <p class="kicker">Received</p>
-          <h3>The note is on its way</h3>
-          <p>Thank you. Rakibul Islam will read it .</p>
-          <button id="sent-again" class="btn btn-read" type="button">Write another</button>
+          <p class="kicker"><span class="moon moon-sm" aria-hidden="true"></span>Message Sent</p>
+          <h3>Thank You for Your Message!</h3>
+          <p>Your note has been delivered to Rakibul Islam. Thank you for reaching out—I appreciate your message and will reply soon.</p>
+          <button id="sent-again" class="btn btn-read" type="button">Send another message</button>
         </div>
         <form id="contact-form" class="form-card reveal" style="--d: 0.1s" action="https://formsubmit.co/riojuincy@gmail.com" method="POST">
           <input type="hidden" name="_subject" value="A note for Rakibul Islam" />
