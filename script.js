@@ -5,7 +5,7 @@
     sent: "Thank you for your message! Rakibul Islam has received your note.",
     need: "Please add your name and a short note.",
     fail: "The note could not be sent from here. Your email app will open instead.",
-    activate: "Check rio@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
+    activate: "Check riojuincy@gmail.com, including Spam, and open the FormSubmit confirmation link. After that, notes will arrive."
   };
 
   var year = document.getElementById("year");
