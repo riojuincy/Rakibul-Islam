@@ -40,10 +40,31 @@ body {
   font-optical-sizing: auto;
   letter-spacing: 0.012em;
   line-height: 1.7;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
   background:
     radial-gradient(980px 560px at var(--bx, 6%) var(--by, -12%), rgba(246, 227, 176, 0.28), transparent 58%),
     radial-gradient(760px 480px at var(--bx2, 96%) var(--by2, 4%), rgba(122, 104, 224, 0.06), transparent 56%),
     var(--bg);
+}
+
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
 }
 
 .glow {
@@ -1943,15 +1964,29 @@ section[id],
 
 @media (max-width: 768px) {
   .enter-overlay {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .hero-panel,
   .card,
   .portrait-orbit,
   canvas {
-    transform: translateZ(0);
-    will-change: transform;
+    transform: none;
+    will-change: auto;
+  }
+  /* Natural smooth mobile scrolling without jank */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  /* Turn off heavy duplicate particle canvas, meteors & dust on phones to keep 60fps */
+  #rain,
+  .dust,
+  .meteors {
+    display: none !important;
+  }
+  #stars {
+    pointer-events: none;
   }
 }
 

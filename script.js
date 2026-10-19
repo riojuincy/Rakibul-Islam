@@ -696,16 +696,18 @@
       paintTime();
       paintSeek();
     });
+    audio.addEventListener("play", startViz);
+    audio.addEventListener("pause", stopViz);
+    audio.addEventListener("ended", stopViz);
 
     loadTrack(currentTrackIndex, false);
   }
 
   var wave = [];
-  var vizCleared = false;
+  var vizId = null;
   function paintViz() {
     var playing = orbit && orbit.classList.contains("playing") && analyser && freq;
     if (playing) {
-      vizCleared = false;
       analyser.getByteFrequencyData(freq);
       var bass = Math.pow(freq[2] / 255, 0.7);
       orbit.style.transform = "scale(" + (1 + bass * 0.045).toFixed(3) + ")";
@@ -719,17 +721,31 @@
         wave[i] = level >= last ? last * 0.18 + level * 0.82 : last * 0.72 + level * 0.28;
         if (arm.firstChild) arm.firstChild.style.height = (4 + wave[i] * 24).toFixed(1) + "px";
       });
-    } else if (!vizCleared) {
-      vizCleared = true;
-      if (orbit) orbit.style.transform = "";
-      bars.forEach(function (arm, i) {
-        wave[i] = 0;
-        if (arm.firstChild) arm.firstChild.style.height = "0px";
-      });
+      vizId = window.requestAnimationFrame(paintViz);
+    } else {
+      stopViz();
     }
-    window.requestAnimationFrame(paintViz);
   }
-  window.requestAnimationFrame(paintViz);
+
+  function startViz() {
+    if (!vizId) {
+      vizId = window.requestAnimationFrame(paintViz);
+    }
+  }
+
+  function stopViz() {
+    if (vizId) {
+      window.cancelAnimationFrame(vizId);
+      vizId = null;
+    }
+    if (orbit) orbit.style.transform = "";
+    bars.forEach(function (arm, i) {
+      wave[i] = 0;
+      if (arm.firstChild) arm.firstChild.style.height = "0px";
+    });
+  }
+
+  stopViz();
 })();
 
 (function () {
@@ -763,42 +779,45 @@
     if (!canvas || !ctx) return;
     w = window.innerWidth;
     h = window.innerHeight;
-    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 2);
+    var dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    var count = isMobile ? Math.max(16, Math.min(26, Math.floor(w / 18))) : Math.max(42, Math.min(100, Math.floor(w / 14)));
+    var count = isMobile ? Math.max(10, Math.min(18, Math.floor(w / 28))) : Math.max(42, Math.min(100, Math.floor(w / 14)));
     stars = [];
     for (var i = 0; i < count; i += 1) stars.push(makeStar(true));
     resizeRain();
   }
 
   function resizeRain() {
-    if (!rainCanvas || !rctx) return;
+    if (!rainCanvas || !rctx || isMobile) {
+      drops = [];
+      return;
+    }
     rw = window.innerWidth;
     rh = window.innerHeight;
-    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
     rainCanvas.width = Math.floor(rw * dpr);
     rainCanvas.height = Math.floor(rh * dpr);
     rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    var count = isMobile ? Math.max(12, Math.min(20, Math.floor(rw / 24))) : Math.max(34, Math.min(75, Math.floor(rw / 18)));
+    var count = Math.max(34, Math.min(75, Math.floor(rw / 18)));
     drops = [];
     for (var i = 0; i < count; i += 1) {
       drops.push({
         x: Math.random() * rw,
         y: Math.random() * rh,
-        len: isMobile ? 12 + Math.random() * 16 : 16 + Math.random() * 24,
-        vy: isMobile ? 7 + Math.random() * 7 : 9 + Math.random() * 11,
+        len: 16 + Math.random() * 24,
+        vy: 9 + Math.random() * 11,
         vx: -1.6 - Math.random() * 0.8,
-        o: isMobile ? 0.12 + Math.random() * 0.2 : 0.14 + Math.random() * 0.28
+        o: 0.14 + Math.random() * 0.28
       });
     }
   }
 
   function paintRain() {
-    if (!rctx) return;
+    if (!rctx || isMobile || !drops.length) return;
     rctx.clearRect(0, 0, rw, rh);
     rctx.lineWidth = isMobile ? 1 : 1.15;
     for (var i = 0; i < drops.length; i += 1) {
@@ -909,6 +928,7 @@
   }
 
   function follow() {
+    if (!fine) return;
     if (coordsDirty) {
       coordsDirty = false;
       root.style.setProperty("--mx", mx + "px");
@@ -919,7 +939,6 @@
       root.style.setProperty("--by2", ((my / Math.max(h, 1)) * 20 - 6) + "%");
     }
 
-    if (!fine) return;
     parts.forEach(function (el) {
       var rect = el.getBoundingClientRect();
       if (rect.bottom < -40 || rect.top > h + 40) return;
@@ -949,6 +968,7 @@
   }
 
   window.addEventListener("mousemove", function (event) {
+    if (!fine) return;
     var travel = Math.hypot(event.clientX - mx, event.clientY - my);
     mx = event.clientX;
     my = event.clientY;
@@ -962,18 +982,18 @@
 
   window.addEventListener("pointerdown", function (event) {
     if (event.clientX == null || event.clientY == null) return;
-    var maxSparks = isMobile ? 40 : 180;
-    var sparkCount = isMobile ? 6 : 14;
+    var maxSparks = isMobile ? 30 : 180;
+    var sparkCount = isMobile ? 4 : 14;
     for (var i = 0; i < sparkCount; i += 1) {
       var angle = (i / sparkCount) * Math.PI * 2 + (Math.random() * 0.3);
-      var speed = Math.random() * (isMobile ? 1.8 : 2.6) + 1;
+      var speed = Math.random() * (isMobile ? 1.4 : 2.6) + 1;
       sparks.push({
         x: event.clientX,
         y: event.clientY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 0.2,
-        life: 1.15,
-        r: Math.random() * (isMobile ? 1.6 : 2.2) + 1,
+        life: 1.1,
+        r: Math.random() * (isMobile ? 1.4 : 2.2) + 1,
         gold: Math.random() > 0.25
       });
     }
@@ -987,11 +1007,46 @@
   window.addEventListener("resize", resize);
   resize();
 
+  var isScrolling = false;
+  var scrollTimer = null;
+  window.addEventListener("scroll", function () {
+    if (!isMobile) return;
+    isScrolling = true;
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function () {
+      isScrolling = false;
+    }, 120);
+  }, { passive: true });
+
   function frame() {
-    follow();
-    paint();
-    paintRain();
+    if (!isScrolling) {
+      follow();
+      paint();
+      if (!isMobile) paintRain();
+    }
     window.requestAnimationFrame(frame);
   }
   window.requestAnimationFrame(frame);
+
+  // Content, Image & Source Code Protection
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  }, false);
+
+  document.addEventListener("keydown", function (e) {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i" || e.key === "J" || e.key === "j" || e.key === "C" || e.key === "c")) ||
+      (e.ctrlKey && (e.key === "U" || e.key === "u" || e.key === "S" || e.key === "s"))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  }, false);
+
+  document.addEventListener("dragstart", function (e) {
+    if (e.target && e.target.nodeName === "IMG") {
+      e.preventDefault();
+    }
+  }, false);
 })();
