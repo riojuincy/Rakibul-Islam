@@ -2,7 +2,7 @@
   "use strict";
 
   var COPY = {
-    sent: "Thank you for your message! Rakibul Islam has received your note.",
+    sent: "Thank you for your message! Rio Juincy has received your note.",
     need: "Please add your name and a short note.",
     fail: "The note could not be sent. Your email app will open instead."
   };
@@ -120,7 +120,7 @@
 
   function openMail(name, email, message) {
     var body = "Name: " + name + (email ? "\nEmail: " + email : "") + "\n\n" + message;
-    window.location.href = "mailto:riojuincy@gmail.com?subject=" + encodeURIComponent("A note for Rakibul Islam") + "&body=" + encodeURIComponent(body);
+    window.location.href = "mailto:riojuincy@gmail.com?subject=" + encodeURIComponent("A note for Rio Juincy") + "&body=" + encodeURIComponent(body);
   }
 
   var again = document.getElementById("sent-again");
@@ -1018,7 +1018,19 @@
     }, 120);
   }, { passive: true });
 
-  function frame() {
+  var lastMobileTime = 0;
+  var mobileInterval = 1000 / 40; // Precision 40 FPS target for mobile
+
+  function frame(now) {
+    if (isMobile && now) {
+      if (!lastMobileTime) lastMobileTime = now;
+      var elapsed = now - lastMobileTime;
+      if (elapsed < mobileInterval) {
+        window.requestAnimationFrame(frame);
+        return;
+      }
+      lastMobileTime = now - (elapsed % mobileInterval);
+    }
     if (!isScrolling) {
       follow();
       paint();

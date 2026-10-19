@@ -1,6 +1,6 @@
-# 🎬 Rakibul Islam — Movie Explainer & Portfolio
+# 🎬 Rio Juincy — Movie Explainer & Portfolio
 
-The official portfolio of **Rakibul Islam** (Movie Explainer). Film explanations on YouTube, complete websites, software, games, and poetry.
+The official portfolio of **Rio Juincy** (Movie Explainer). Film explanations on YouTube, complete websites, software, games, and poetry.
 
 🔗 **Live Experience:** [https://riojuincy.github.io](https://riojuincy.github.io)
 

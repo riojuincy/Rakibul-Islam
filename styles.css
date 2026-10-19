@@ -2573,71 +2573,163 @@ html[data-theme="night"] .social:hover {
   animation: heroTextGleam 6s ease-in-out infinite alternate;
 }
 
+/* ==========================================================================
+   RIO JUINCY — NEXT-GENERATION LUXURY DESIGN & HIGH-FPS ANIMATION SUITE
+   ========================================================================== */
+
+/* 1. KINETIC TYPOGRAPHY FOR RIO JUINCY */
+h1 {
+  gap: 0.12em 0.26em;
+}
+
+h1 .first,
+.hero h1 .first {
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #1b1610 0%, #4a361c 35%, #c8952a 70%, #1b1610 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: nameShimmer 5s ease-in-out infinite alternate;
+  display: inline-block;
+  transform: translateZ(0);
+}
+
+html[data-theme="night"] h1 .first,
 html[data-theme="night"] .hero h1 .first {
-  background: linear-gradient(135deg, #ffffff 0%, #fce08a 45%, #ffffff 90%);
-  background-size: 200% auto;
+  background: linear-gradient(135deg, #ffffff 0%, #f6deb3 40%, #e5bf74 70%, #ffffff 100%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: heroTextGleam 6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 26px rgba(246, 215, 138, 0.42));
+  animation: nameShimmer 4.5s ease-in-out infinite alternate;
 }
 
+h1 .last,
 .hero h1 .last {
-  background: linear-gradient(135deg, #d49c2a 0%, #ffeaa7 50%, #b8860b 100%);
-  background-size: 200% auto;
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #c4922a 0%, #f9e29a 30%, #ffffff 50%, #d49a26 75%, #b5801c 100%);
+  background-size: 250% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: heroTextGleam 4.5s ease-in-out infinite alternate;
+  animation: nameGleam 4s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 2px 14px rgba(196, 146, 42, 0.3));
+  transform: translateZ(0);
 }
 
-@keyframes heroTextGleam {
+html[data-theme="night"] h1 .last,
+html[data-theme="night"] .hero h1 .last {
+  background: linear-gradient(135deg, #ffe08a 0%, #ffd060 30%, #ffffff 52%, #f7b733 80%, #ffd978 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 28px rgba(247, 183, 51, 0.55));
+  animation: nameGleam 3.5s ease-in-out infinite;
+}
+
+@keyframes nameShimmer {
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
 }
 
-/* 3. RADAR PING STATUS */
-.status i {
+@keyframes nameGleam {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.name-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fae298, #db9e2a);
+  box-shadow: 0 0 14px rgba(219, 158, 42, 0.8), 0 0 0 3px rgba(255, 255, 255, 0.9);
+  align-self: center;
   position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #3ddc6e;
-  box-shadow: 0 0 10px #3ddc6e;
+  animation: dotBreathe 2.4s ease-in-out infinite;
 }
 
-.status i::after {
+html[data-theme="night"] .name-dot {
+  background: #fce08a;
+  box-shadow: 0 0 16px rgba(252, 224, 138, 0.9), 0 0 0 3px rgba(246, 215, 138, 0.25);
+}
+
+@keyframes dotBreathe {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.3); filter: brightness(1.25); }
+}
+
+/* 2. CINEMATIC YOUTUBE BUTTON UPGRADE */
+.btn.btn-yt {
+  position: relative;
+  background: linear-gradient(135deg, #ff2346 0%, #d80027 48%, #9f001c 100%);
+  color: #ffffff !important;
+  box-shadow: 0 10px 28px rgba(216, 0, 39, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 130, 150, 0.35);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, filter 0.28s ease;
+}
+
+.btn.btn-yt::before {
   content: "";
   position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 1.5px solid #3ddc6e;
-  animation: statusRadar 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-@keyframes statusRadar {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2.8); opacity: 0; }
-}
-
-/* 4. SOUND-REACTIVE VISUALIZER SPECTRUM & DUAL ORBIT */
-.portrait-orbit.playing .viz b {
-  opacity: 0.95;
-  background: linear-gradient(180deg, #fff7cc 0%, #f6d88b 50%, #c4922a 100%);
-  box-shadow: 0 0 12px rgba(246, 216, 139, 0.8), 0 0 4px #fff;
-}
-
-html[data-theme="night"] .portrait-orbit.playing .viz b {
-  background: linear-gradient(180deg, #ffffff 0%, #fce08a 55%, #e4c56a 100%);
-  box-shadow: 0 0 14px rgba(252, 224, 138, 0.95), 0 0 6px #fff;
-}
-
-.portrait-orbit.playing::after {
-  content: "";
-  position: absolute;
-  inset: -22px;
-  border-radius: 50%;
-  border: 1px dashed rgba(228, 197, 106, 0.35);
-  animation: orbitCounter 14s linear infinite;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
   pointer-events: none;
+  animation: btnYtShine 3.2s ease-in-out infinite;
+}
+
+@keyframes btnYtShine {
+  0%, 40% { left: -100%; }
+  60%, 100% { left: 180%; }
+}
+
+.btn.btn-yt:hover {
+  transform: translateY(-3px) scale(1.035);
+  background: linear-gradient(135deg, #ff3656 0%, #e6002c 50%, #b30022 100%);
+  box-shadow: 0 16px 36px rgba(225, 0, 44, 0.58), 0 0 24px rgba(255, 80, 110, 0.5);
+  filter: brightness(1.08);
+}
+
+.btn.btn-yt:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.btn.btn-yt svg {
+  transition: transform 0.25s ease;
+}
+
+.btn.btn-yt:hover svg {
+  transform: scale(1.18);
+}
+
+/* 3. DUAL CELESTIAL ORBIT & SOUND-REACTIVE VISUALIZER */
+.portrait-orbit {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.portrait-orbit::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 160, 48, 0.35);
+  animation: orbitCounter 16s linear infinite;
+  pointer-events: none;
+}
+
+html[data-theme="night"] .portrait-orbit::after {
+  border-color: rgba(246, 215, 138, 0.3);
 }
 
 @keyframes orbitCounter {
@@ -2645,7 +2737,141 @@ html[data-theme="night"] .portrait-orbit.playing .viz b {
   to { transform: rotate(0deg); }
 }
 
-/* 5. WALLET COIN HOVER DYNAMICS */
+.portrait-orbit.playing .viz b {
+  opacity: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #f9e29a 30%, #d49a26 100%);
+  box-shadow: 0 0 14px rgba(249, 226, 154, 0.9), 0 0 5px #ffffff;
+}
+
+html[data-theme="night"] .portrait-orbit.playing .viz b {
+  background: linear-gradient(180deg, #ffffff 0%, #fce08a 45%, #e4c56a 100%);
+  box-shadow: 0 0 16px rgba(252, 224, 138, 0.95), 0 0 6px #ffffff;
+}
+
+/* 4. SOCIAL MEDIA HOLOGRAPHIC CARDS */
+.social {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.social::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.social:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.social.yt:hover {
+  border-color: rgba(225, 0, 44, 0.55);
+  box-shadow: 0 14px 34px rgba(225, 0, 44, 0.22), 0 0 20px rgba(225, 0, 44, 0.12);
+}
+
+.social.fb:hover {
+  border-color: rgba(24, 119, 242, 0.55);
+  box-shadow: 0 14px 34px rgba(24, 119, 242, 0.22), 0 0 20px rgba(24, 119, 242, 0.12);
+}
+
+.social.ig:hover {
+  border-color: rgba(238, 42, 123, 0.55);
+  box-shadow: 0 14px 34px rgba(238, 42, 123, 0.22), 0 0 20px rgba(238, 42, 123, 0.12);
+}
+
+.social.x:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), 0 0 18px rgba(255, 255, 255, 0.15);
+}
+
+.social.dc:hover {
+  border-color: rgba(88, 101, 242, 0.55);
+  box-shadow: 0 14px 34px rgba(88, 101, 242, 0.22), 0 0 20px rgba(88, 101, 242, 0.12);
+}
+
+.social .ico {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.social:hover .ico {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* 5. LUXURY WORK CARDS */
+.card {
+  position: relative;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease, border-color 0.32s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(212, 160, 48, 0.35);
+  border-color: rgba(212, 160, 48, 0.45);
+}
+
+html[data-theme="night"] .card:hover {
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.55), 0 0 24px rgba(246, 215, 138, 0.15);
+  border-color: rgba(246, 215, 138, 0.4);
+}
+
+.card .num {
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--moon);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .num {
+  transform: scale(1.18);
+  color: #db9e2a;
+}
+
+/* 6. BUTTONS & MICRO-INTERACTIONS */
+.btn {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.05);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-mail:hover {
+  box-shadow: 0 14px 34px rgba(231, 197, 106, 0.45);
+}
+
+.btn-read:hover {
+  box-shadow: 0 14px 34px rgba(122, 104, 224, 0.5);
+}
+
+/* 7. FORM INPUT FOCUS GLOW */
+input, textarea {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #d49a26 !important;
+  box-shadow: 0 0 0 3.5px rgba(212, 154, 38, 0.25), 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="night"] input:focus,
+html[data-theme="night"] textarea:focus {
+  border-color: #fce08a !important;
+  box-shadow: 0 0 0 3.5px rgba(252, 224, 138, 0.3), 0 8px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* 8. WALLET COIN DYNAMICS */
 .w-ico {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
 }
@@ -2673,56 +2899,16 @@ html[data-theme="night"] .portrait-orbit.playing .viz b {
   transform: scale(0.92);
 }
 
-/* 6. INTERACTIVE BUTTON HOVER PARTICLES & BOUNCES */
-.btn {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, filter 0.25s ease;
-}
-.btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  filter: brightness(1.05);
-}
-.btn:active {
-  transform: translateY(1px) scale(0.98);
-}
-.btn-primary:hover {
-  box-shadow: 0 16px 36px rgba(243, 230, 192, 0.45);
-}
-
-/* 7. GLOWING INPUTS & FORM CARD */
-input, textarea {
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-input:focus, textarea:focus {
-  border-color: var(--moon);
-  box-shadow: 0 0 0 3.5px rgba(228, 197, 106, 0.25), 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-html[data-theme="night"] input:focus,
-html[data-theme="night"] textarea:focus {
-  border-color: #fce08a;
-  box-shadow: 0 0 0 3.5px rgba(252, 224, 138, 0.28), 0 8px 28px rgba(0, 0, 0, 0.4);
-}
-
-/* 8. CELESTIAL SHOOTING METEORS GLOW */
-.meteors span {
-  box-shadow: 0 0 8px rgba(243, 230, 192, 0.6);
-}
-
 /* 9. SMOOTH CINEMATIC SCROLL REVEAL */
 @keyframes rise {
-  from { opacity: 0; transform: translateY(28px) scale(0.985); filter: blur(3px); }
-  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  from { opacity: 0; transform: translateY(24px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* 10. SOCIAL MEDIA HOVER GLINT */
-.social:hover .ico {
-  transform: scale(1.12) rotate(4deg);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
-}
-
-/* 11. AUDIO PLAYER PULSE ON PLAYING */
+/* 10. AUDIO PLAYER GLOW ON DESKTOP */
 .player.on {
-  border-color: rgba(228, 197, 106, 0.4);
-  box-shadow: 0 10px 32px rgba(228, 197, 106, 0.22);
+  border-color: rgba(228, 197, 106, 0.5);
+  box-shadow: 0 10px 32px rgba(228, 197, 106, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 .player.on .player-eq i {
   background: #e4c56a;
